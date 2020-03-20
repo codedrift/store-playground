@@ -1,0 +1,12 @@
+{
+	"compilerOptions": {
+	  "target": "ESNext",
+	  "module": "CommonJS",
+	  "moduleResolution": "Node",
+	  "outDir": "./build",
+	  "resolveJsonModule": true,
+	  "strict": true,
+	  "noImplicitAny": true,
+	  "esModuleInterop": true
+	}
+  }
