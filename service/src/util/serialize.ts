@@ -1,17 +1,17 @@
-export function deserialize(value: any): string {
+export function deserializeFromString(value: any): string {
   try {
     return JSON.parse(value);
   } catch (e) {
-    console.warn("RedisStore", "Error deserializing", value);
+    console.warn("Error deserializing", value);
     return value;
   }
 }
 
-export function serialize(value: any): string {
+export function serializeToString(value: any): string {
   try {
     return JSON.stringify(value);
   } catch (e) {
-    console.warn("RedisStore", "Error serializing", value);
+    console.warn("Error serializing", value);
     return `${value}`;
   }
 }

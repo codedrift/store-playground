@@ -1,6 +1,6 @@
 import { Store } from "../model";
 import cassandra from "cassandra-driver";
-import { serialize, deserialize } from "../util/serialize";
+import { serializeToString, deserializeFromString } from "../util/serialize";
 
 export class CassandraStore implements Store {
   private client: cassandra.Client;
@@ -36,13 +36,13 @@ export class CassandraStore implements Store {
     });
     console.log("CassandraStore", "Get", key, selectResult);
     const row = selectResult.rows.map(r => r.cache_value).find(Boolean);
-    return deserialize(row);
+    return deserializeFromString(row);
   }
 
   async set(key: string, value: any): Promise<any> {
     console.log("CassandraStore", "Set", key);
     const query = "UPDATE cache SET cache_value = ? WHERE cache_key=?";
-    const params = [serialize(value), key];
+    const params = [serializeToString(value), key];
 
     await this.client.execute(query, params, { prepare: true });
     return value;

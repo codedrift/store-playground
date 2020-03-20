@@ -1,7 +1,7 @@
 import redis, { RedisClient } from "redis";
 import { Store } from "../model";
 import { promisify } from "util";
-import { deserialize, serialize } from "../util/serialize";
+import { deserializeFromString, serializeToString } from "../util/serialize";
 
 export class RedisStore implements Store {
   private client: RedisClient;
@@ -21,13 +21,13 @@ export class RedisStore implements Store {
     console.log("RedisStore", "Get", key);
     const getAsync = promisify(this.client.get).bind(this.client);
     const readValue = await getAsync(key);
-    return deserialize(readValue);
+    return deserializeFromString(readValue);
   }
 
   async set(key: string, value: any) {
     console.log("RedisStore", "Set", key, value);
     const setAsync = promisify(this.client.set).bind(this.client);
-    const serializedValue = serialize(value);
+    const serializedValue = serializeToString(value);
     await setAsync(key, serializedValue);
     return value;
   }
