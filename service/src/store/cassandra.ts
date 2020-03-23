@@ -5,25 +5,33 @@ import { serializeToString, deserializeFromString } from "../util/serialize";
 export class CassandraStore implements Store {
   private client: cassandra.Client;
 
+  private authProvider = new cassandra.auth.PlainTextAuthProvider(
+    "cassandra",
+    "cassandra"
+  );
+
   constructor() {
-    const authProvider = new cassandra.auth.PlainTextAuthProvider(
-      "cassandra",
-      "cassandra"
-    );
     this.client = new cassandra.Client({
       contactPoints: ["0.0.0.0"],
       localDataCenter: "datacenter1",
       keyspace: "testkeyspace",
-      authProvider
+      authProvider: this.authProvider
     });
   }
   setup(): Promise<any> {
+    const setupClient = new cassandra.Client({
+      contactPoints: ["0.0.0.0"],
+      localDataCenter: "datacenter1",
+      // omit keyspace before setup
+      authProvider: this.authProvider
+    });
     return Promise.all([
-      this.client.execute(
+      setupClient.execute(
         `CREATE KEYSPACE testkeyspace WITH replication = {'class':'SimpleStrategy', 'replication_factor':1}`
       ),
-      this.client.execute(
-        `CREATE TABLE cache (cache_key text PRIMARY KEY, cache_value text)`
+      setupClient.execute(
+        // need to specify keyspacase explicity here
+        `CREATE TABLE testkeyspace.cache (cache_key text PRIMARY KEY, cache_value text)`
       )
     ]);
   }
