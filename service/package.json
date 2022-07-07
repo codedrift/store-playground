@@ -18,7 +18,7 @@
 		"cors": "^2.8.5",
 		"express": "^4.17.1",
 		"lodash": "^4.17.15",
-		"moment": "^2.24.0",
+		"moment": "^2.29.4",
 		"redis": "^3.0.2",
 		"tslint-eslint-rules": "^5.4.0",
 		"typescript": "^3.8.3",
